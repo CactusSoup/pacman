@@ -14,6 +14,9 @@ let foodColour = "#FEB897";
 
 let score = 0;
 
+let ghosts = [];
+let ghostCount = 4;
+
 let createRect = (x,y,width,height,color) => {
     canvasCtx.fillStyle = color;
     canvasCtx.fillRect(x,y,width,height);
@@ -27,6 +30,14 @@ const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
 const DIRECTION_DOWN = 1;
+
+
+let ghostLocations = [
+    {x: 0, y: 0},
+    {x: 176, y: 0},
+    {x: 0, y: 121},
+    {x:176,  y:121}
+]
 
 let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -54,6 +65,13 @@ let map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
+let randomTargetsForGhosts = [
+    {x: 1 * blockSize, y: 1 * blockSize},
+    {x: 1 * blockSize, y: (map.length - 2) * blockSize},
+    {x: (map[0].length -2) * blockSize, y: blockSize},
+    {x: (map[0].length -2) * blockSize, y: (map.length -2) * blockSize}
+]
+
 let gameLoop = () => {
     update();
     draw();
@@ -62,6 +80,9 @@ let gameLoop = () => {
 let update = () => {
     pacman.move();
     pacman.eat();
+    for (let index = 0; index < ghosts.length; index++){
+        ghosts[index].move();
+    }
 }
 
 let draw = () => {
@@ -70,6 +91,13 @@ let draw = () => {
     pacman.draw();
     drawFood();
     drawScore();
+    drawGhosts();
+}
+
+let drawGhosts = () => {
+    for (let index = 0; index < ghosts.length; index++){
+        ghosts[index].draw();
+    }
 }
 
 let drawScore = () => {
@@ -124,7 +152,27 @@ let createNewPacman = () => {
     );
 }
 
+let createGhosts = () => {
+    ghosts = []
+    for (let index = 0; index < ghostCount; index++){
+        let newGhost = new Ghost(
+            9 * blockSize + (index %2 == 0 ? 0 : 1) * blockSize,
+            10 * blockSize + (index %2 == 0 ? 0 : 1 ) * blockSize,
+            blockSize,
+            blockSize,
+            pacman.speed/2,
+            DIRECTION_RIGHT,
+            ghostLocations[index % 4].x,
+            ghostLocations[index % 4].y,
+            124, 116, 6 + index
+        );
+        ghosts.push(newGhost);
+    }
+
+}
+
 createNewPacman();
+createGhosts();
 gameLoop();
 
 window.addEventListener("keydown", (event) => {
