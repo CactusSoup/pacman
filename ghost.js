@@ -194,6 +194,10 @@ class Ghost {
         canvasCtx.save();
         canvasCtx.drawImage(ghostFrames, this.imageX, this.imageY, this.imageWidth, this.imageHeight, this.x, this.y, this.width, this.height);
         canvasCtx.restore();
+//        canvasCtx.beginPath();
+  //      canvasCtx.strokeStyle = "red";
+    //    canvasCtx.arc( this.x + blockSize /2, this.y + blockSize /2, this.range * blockSize, 0, 2*Math.PI);
+      //  canvasCtx.stroke();
     }
 }
 
