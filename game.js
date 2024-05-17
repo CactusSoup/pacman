@@ -11,7 +11,7 @@ let wallSpaceWidth = blockSize / 1.3;
 let wallOffset = (blockSize - wallSpaceWidth) / 2;
 
 let foodColour = "#FEB897";
-
+let foodCount = 0;
 
 let score = 0;
 let lives = 3;
@@ -66,6 +66,13 @@ let map = [
     [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
+    for (let index = 0; index < map.length; index++) {
+        for (let secondIndex = 0; secondIndex < map[index].length; secondIndex++){
+            if (map[index][secondIndex] == 2) {
+                foodCount++;
+            }
+        }
+    }
 
 let randomTargetsForGhosts = [
     {x: 1 * blockSize, y: 1 * blockSize},
@@ -88,6 +95,10 @@ let update = () => {
     if (pacman.checkGhostCollision()){
         restartGame();
     }
+    if (score >= foodCount) { 
+        drawWin();
+        clearInterval(gameInterval);
+    }
 }
 
 let restartGame = () => {
@@ -109,6 +120,12 @@ let drawGameOver = () => {
     canvasCtx.font = "20px Emulogic";
     canvasCtx.fillStyle = "white";
     canvasCtx.fillText("Game Over!", 150, 200);
+}
+
+let drawWin = () => {
+    canvasCtx.font = "20px Emulogic";
+    canvasCtx.fillStyle = "white";
+    canvasCtx.fillText("Winner!", 150, 200);
 }
 
 let drawLives = () => {
