@@ -93,6 +93,16 @@ class Pacman {
 
         return false;
     }
+
+    checkGhostCollision(){
+        for (let index = 0; index < ghosts.length; index++){
+            let ghost = ghosts[index];
+            if (ghost.getMapX() == this.getMapX() && ghost.getMapY() == this.getMapY()){
+                return true;
+            }
+            return false;
+        }
+    }
     
     getMapX(){
         return parseInt(this.x / blockSize);
