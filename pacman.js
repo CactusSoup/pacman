@@ -23,6 +23,18 @@ class Pacman {
         }
     }
 
+    eat() {
+    for (let index = 0; index < map.length; index++) {
+        for (let secondIndex = 0; secondIndex < map[index].length; secondIndex++){
+            if (map[index][secondIndex] == 2 && this.getMapX() == secondIndex && this.getMapY() == index) {
+                map[index][secondIndex] = 3;
+                    score+=1;
+            }
+        }
+    }
+
+    }
+
     changeDirectionIfPossible() {
         if (this.direction == this.nextDirection){
             return;

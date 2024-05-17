@@ -10,6 +10,10 @@ let wallInnerColour = "black";
 let wallSpaceWidth = blockSize / 1.3;
 let wallOffset = (blockSize - wallSpaceWidth) / 2;
 
+let foodColour = "#FEB897";
+
+let score = 0;
+
 let createRect = (x,y,width,height,color) => {
     canvasCtx.fillStyle = color;
     canvasCtx.fillRect(x,y,width,height);
@@ -57,12 +61,14 @@ let gameLoop = () => {
 
 let update = () => {
     pacman.move();
+    pacman.eat();
 }
 
 let draw = () => {
     createRect(0,0,canvas.width, canvas.height, "black");
     drawWalls();
     pacman.draw();
+    drawFood();
 }
 
 let gameInterval = setInterval(gameLoop, 1000/ fps);
@@ -85,6 +91,17 @@ let drawWalls = () => {
                 if (index < map.length - 1 && map[index + 1][secondIndex] == 1){
                     createRect(secondIndex * blockSize + wallOffset, index * blockSize + wallOffset , wallSpaceWidth , wallSpaceWidth + wallOffset, wallInnerColour);
                 }
+            }
+        }
+    }
+}
+
+let drawFood = () => {
+    for (let index = 0; index < map.length; index++) {
+        for (let secondIndex = 0; secondIndex < map[index].length; secondIndex++){
+            if (map[index][secondIndex] == 2) {
+                // Food
+                createRect(secondIndex * blockSize + blockSize /3,index * blockSize + blockSize /3, blockSize/3, blockSize /3, foodColour);
             }
         }
     }
