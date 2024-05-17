@@ -1,3 +1,17 @@
+const ghostLocations = [
+  { x: 0, y: 0 },
+  { x: 176, y: 0 },
+  { x: 0, y: 121 },
+  { x: 176, y: 121 },
+];
+
+let randomTargetsForGhosts = [
+  { x: 1 * blockSize, y: 1 * blockSize },
+  { x: 1 * blockSize, y: (map.length - 2) * blockSize },
+  { x: (map[0].length - 2) * blockSize, y: blockSize },
+  { x: (map[0].length - 2) * blockSize, y: (map.length - 2) * blockSize },
+];
+
 class Ghost {
   constructor(
     x,

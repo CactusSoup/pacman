@@ -1,18 +1,17 @@
 class Pacman {
-  constructor(x, y, width, height, speed, direction) {
+  constructor(x, y, size, speed, direction) {
     this.x = x;
     this.y = y;
-    this.width = width;
-    this.height = height;
+    this.size = size;
     this.speed = speed;
     this.direction = direction;
     this.nextDirection = this.direction;
-    this.currentFrame = 1;
-    this.frameCount = 7;
+    this.currentFrame = 0;
+    this.frameCount = 6;
 
     setInterval(() => {
       this.changeAnimation();
-    }, 100);
+    }, 1000 / fps);
   }
 
   move() {
@@ -24,21 +23,9 @@ class Pacman {
   }
 
   eat() {
-    for (let index = 0; index < map.length; index++) {
-      for (
-        let secondIndex = 0;
-        secondIndex < map[index].length;
-        secondIndex++
-      ) {
-        if (
-          map[index][secondIndex] == 2 &&
-          this.getMapX() == secondIndex &&
-          this.getMapY() == index
-        ) {
-          map[index][secondIndex] = 3;
-          score += 1;
-        }
-      }
+    if (map[this.getMapY()][this.getMapX()] == 2) {
+      map[this.getMapY()][this.getMapX()] = 3;
+      score += 1;
     }
   }
 
@@ -90,16 +77,12 @@ class Pacman {
   }
 
   checkCollision() {
-    if (
+    return (
       map[this.getMapY()][this.getMapX()] == 1 ||
       map[this.getMapYRightSide()][this.getMapX()] == 1 ||
       map[this.getMapY()][this.getMapXRightSide()] == 1 ||
       map[this.getMapYRightSide()][this.getMapXRightSide()] == 1
-    ) {
-      return true;
-    }
-
-    return false;
+    );
   }
 
   checkGhostCollision() {
@@ -111,8 +94,8 @@ class Pacman {
       ) {
         return true;
       }
-      return false;
     }
+    return false;
   }
 
   getMapX() {
@@ -132,8 +115,7 @@ class Pacman {
   }
 
   changeAnimation() {
-    this.currentFrame =
-      this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
+    this.currentFrame = (this.currentFrame + 1) % this.frameCount;
   }
 
   draw() {
@@ -143,14 +125,14 @@ class Pacman {
     canvasCtx.translate(-this.x - blockSize / 2, -this.y - blockSize / 2);
     canvasCtx.drawImage(
       pacmanFrames,
-      (this.currentFrame - 1) * blockSize,
+      this.currentFrame * blockSize,
       0,
       blockSize,
       blockSize,
       this.x,
       this.y,
-      this.width,
-      this.height,
+      this.size,
+      this.size,
     );
     canvasCtx.restore();
   }
