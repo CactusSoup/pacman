@@ -48,7 +48,6 @@ class Ghost {
   }
 
   changeRandomDirection() {
-    this.randomTargetIndex += 1;
     this.randomTargetIndex = parseInt(
       Math.random() * randomTargetsForGhosts.length,
     );
@@ -68,14 +67,12 @@ class Ghost {
   }
 
   isInRangeOfPacman() {
-    let xDistance = Math.abs(pacman.getMapX() - this.getMapX());
-    let yDistance = Math.abs(pacman.getMapY() - this.getMapY());
-    if (
-      Math.sqrt(xDistance * xDistance + yDistance * yDistance) <= this.range
-    ) {
-      return true;
-    }
-    return false;
+    return (
+      Math.sqrt(
+        Math.abs((pacman.getMapX() - this.getMapX()) ** 2) +
+          Math.abs(pacman.getMapY() - this.getMapY()) ** 2,
+      ) <= this.range
+    );
   }
 
   changeDirectionIfPossible() {
@@ -100,9 +97,9 @@ class Ghost {
   }
 
   calculateNewDirection(map, destX, destY) {
-    let mp = [];
+    let mapCopy = [];
     for (let index = 0; index < map.length; index++) {
-      mp[index] = map[index].slice();
+      mapCopy[index] = map[index].slice();
     }
     let queue = [
       {
@@ -116,27 +113,24 @@ class Ghost {
       if (popped.x == destX && popped.y == destY) {
         return popped.moves[0];
       } else {
-        mp[popped.y][popped.x] = 1;
-        let neighbourList = this.addNeighbours(popped, mp);
-
+        mapCopy[popped.y][popped.x] = 1;
+        let neighbourList = this.addNeighbours(popped, mapCopy);
         for (let index = 0; index < neighbourList.length; index++) {
           queue.push(neighbourList[index]);
         }
       }
     }
-
     return DIRECTION_UP;
   }
 
-  addNeighbours(popped, mp) {
+  addNeighbours(popped, mapCopy) {
     let queue = [];
-    let numOfRows = mp.length;
-    let numOfColoumns = mp[0].length;
+    let numOfRows = mapCopy.length;
 
     if (
       popped.x - 1 >= 0 &&
       popped.x - 1 < numOfRows &&
-      mp[popped.y][popped.x - 1] != 1
+      mapCopy[popped.y][popped.x - 1] != 1
     ) {
       let tempMoves = popped.moves.slice();
       tempMoves.push(DIRECTION_LEFT);
@@ -145,7 +139,7 @@ class Ghost {
     if (
       popped.x + 1 >= 0 &&
       popped.x + 1 < numOfRows &&
-      mp[popped.y][popped.x + 1] != 1
+      mapCopy[popped.y][popped.x + 1] != 1
     ) {
       let tempMoves = popped.moves.slice();
       tempMoves.push(DIRECTION_RIGHT);
@@ -154,7 +148,7 @@ class Ghost {
     if (
       popped.y - 1 >= 0 &&
       popped.y - 1 < numOfRows &&
-      mp[popped.y - 1][popped.x] != 1
+      mapCopy[popped.y - 1][popped.x] != 1
     ) {
       let tempMoves = popped.moves.slice();
       tempMoves.push(DIRECTION_UP);
@@ -163,7 +157,7 @@ class Ghost {
     if (
       popped.y + 1 >= 0 &&
       popped.y + 1 < numOfRows &&
-      mp[popped.y + 1][popped.x] != 1
+      mapCopy[popped.y + 1][popped.x] != 1
     ) {
       let tempMoves = popped.moves.slice();
       tempMoves.push(DIRECTION_DOWN);
@@ -232,11 +226,6 @@ class Ghost {
 
   getMapYRightSide() {
     return parseInt((this.y + 0.9999 * blockSize) / blockSize);
-  }
-
-  changeAnimation() {
-    this.currentFrame =
-      this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
   }
 
   draw() {
