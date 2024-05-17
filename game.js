@@ -3,13 +3,20 @@ const canvasCtx = canvas.getContext("2d");
 const pacmanFrames = document.getElementById("animation");
 const ghostFrames = document.getElementById("ghosts");
 
+let fps = 30;
+let blockSize = 20;
+let wallColour = "#342DCA";
+let wallInnerColour = "black";
+let wallSpaceWidth = blockSize / 1.3;
+let wallOffset = (blockSize - wallSpaceWidth) / 2;
+
 let createRect = (x,y,width,height,color) => {
     canvasCtx.fillStyle = color;
     canvasCtx.fillRect(x,y,width,height);
 }
 
-let createSquare = (x,y,size,color) => {
-    createRect(x,y,size,size,color);
+let createBlock = (x,y,color) => {
+    createRect(x * blockSize,y * blockSize,blockSize,blockSize,color);
 }
 
 let map = [
@@ -53,17 +60,26 @@ let draw = () => {
     //TODO: Drawing method.
 }
 
-const fps = 30;
 let gameInterval = setInterval(gameLoop, 1000/ fps);
 
-const blockSize = 20;
-const wallColour = "#342DCA";
 let drawWalls = () => {
     for (let index = 0; index < map.length; index++) {
-        for (let secondIndex = 0; secondIndex < map[0].length; secondIndex++){
+        for (let secondIndex = 0; secondIndex < map[index].length; secondIndex++){
             if (map[index][secondIndex] == 1) {
                 // Wall
-                createRect(secondIndex * blockSize, index * blockSize,blockSize,  blockSize, wallColour);
+                createBlock(secondIndex, index, wallColour);
+                if (secondIndex > 0 && map[index][secondIndex -1] == 1){
+                    createRect(secondIndex * blockSize, index * blockSize + wallOffset, wallSpaceWidth + wallOffset, wallSpaceWidth, wallInnerColour);
+                }
+                if (secondIndex < map[index].length - 1 && map[index][secondIndex + 1] == 1){
+                    createRect(secondIndex * blockSize + wallOffset, index * blockSize + wallOffset, wallSpaceWidth + wallOffset, wallSpaceWidth, wallInnerColour);
+                }
+                if (index > 0 && map[index - 1][secondIndex] == 1){
+                    createRect(secondIndex * blockSize + wallOffset, index * blockSize  , wallSpaceWidth , wallSpaceWidth + wallOffset, wallInnerColour);
+                }
+                if (index < map.length - 1 && map[index + 1][secondIndex] == 1){
+                    createRect(secondIndex * blockSize + wallOffset, index * blockSize + wallOffset , wallSpaceWidth , wallSpaceWidth + wallOffset, wallInnerColour);
+                }
             }
         }
     }
