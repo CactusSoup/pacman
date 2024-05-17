@@ -69,8 +69,14 @@ let draw = () => {
     drawWalls();
     pacman.draw();
     drawFood();
+    drawScore();
 }
 
+let drawScore = () => {
+    canvasCtx.font = "20px Emulogic";
+    canvasCtx.fillStyle = "white";
+    canvasCtx.fillText( "Score: " + score, 0, blockSize * (map.length + 1) + 10);
+}
 let gameInterval = setInterval(gameLoop, 1000/ fps);
 
 let drawWalls = () => {
